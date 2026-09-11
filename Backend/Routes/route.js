@@ -25,8 +25,8 @@ route.post("/jobs",auth,employerAuth,createJob)
 route.get("/jobs",getJobs)
 route.get("/jobs/:jobId",getOneJob)
 
-route.put("/updateJob/:jobId",updateJob)
-route.delete("/deleteJob/:jobId",deleteJob)
+route.put("/updateJob/:jobId", auth, employerAuth, updateJob)
+route.delete("/deleteJob/:jobId", auth, employerAuth, deleteJob)
 
 route.post("/signup",signup)
 route.post("/login",login)
