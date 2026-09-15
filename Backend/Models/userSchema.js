@@ -32,7 +32,8 @@ const user = new mongoose.Schema(
         },
         role:{
             type:String,
-            required:true
+            required:true,
+            enum: ["user"]
         },
     }
 );

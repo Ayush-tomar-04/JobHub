@@ -26,6 +26,11 @@ const employer = new mongoose.Schema(
             type:mongoose.Schema.Types.ObjectId,
             ref:"company",
             required:true
+        },
+        role:{
+            type:String,
+            required:true,
+            enum:["employer"]
         }
     }
 );

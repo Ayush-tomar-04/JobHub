@@ -33,7 +33,7 @@ exports.signup = async(req,res)=>{
             })
         }
         const hashPassword = await bcrypt.hash(password,10)
-        const response = await employer.create({empId, name, email, phone, password:hashPassword , companyId})
+        const response = await employer.create({empId, name, email, phone, password:hashPassword , companyId,role:"employer"})
 
         const safeResponse = response.toObject()
         delete safeResponse.password

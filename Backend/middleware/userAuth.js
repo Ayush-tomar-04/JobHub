@@ -3,17 +3,14 @@
 
 
 
-
-
-
-exports.employerAuth = (req,res,next)=>{
+exports.userAuth = (req,res,next)=>{
     if(!req.user){
-        res.status(401).json({
+        return res.status(401).json({
             success:false,
             message:"Authentication required"
         })
     }
-    if(req.user.role==="employer"){
+    if(req.user.role==="user"){
         next()
     }
     else{
@@ -22,4 +19,5 @@ exports.employerAuth = (req,res,next)=>{
             message:"User is not authorized"
         })
     }
+
 }

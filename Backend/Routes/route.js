@@ -16,6 +16,9 @@ const {signup} = require("../Controller/signup")
 const {login} = require("../Controller/login")
 const {auth} = require("../middleware/auth")
 const {employerAuth} = require("../middleware/employerAuth")
+const {userLogin} = require("../Controller/userLogin")
+const {userProfile} = require("../Controller/getUserProfile")
+const { userAuth } = require("../middleware/userAuth")
 
 route.post("/user",createJobHub)
 route.post("/company",createCompany)
@@ -31,6 +34,8 @@ route.delete("/deleteJob/:jobId", auth, employerAuth, deleteJob)
 route.post("/signup",signup)
 route.post("/login",login)
 
+route.post("/user/login", userLogin)
+route.get("/user/userProfile",auth,userAuth,userProfile)
 
 route.get("/health",(req,res)=>{
      res.json({
