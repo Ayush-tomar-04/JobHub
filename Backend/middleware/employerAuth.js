@@ -8,11 +8,12 @@
 
 exports.employerAuth = (req,res,next)=>{
     if(!req.user){
-        res.status(401).json({
+        return res.status(401).json({
             success:false,
             message:"Authentication required"
         })
     }
+    
     if(req.user.role==="employer"){
         next()
     }

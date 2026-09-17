@@ -14,7 +14,7 @@ exports.userAuth = (req,res,next)=>{
         next()
     }
     else{
-        res.status(403).json({
+         res.status(403).json({
             success:false,
             message:"User is not authorized"
         })
