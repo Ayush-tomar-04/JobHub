@@ -9,6 +9,7 @@
 
 
 
+const { default: mongoose } = require("mongoose")
 const application = require("../Models/application")
 const Job = require("../Models/jobs")
 
@@ -22,10 +23,10 @@ exports.createApplication = async(req,res)=>{
             })
         }
         const {jobId} = req.body
-        if(!jobId){
+        if(!jobId || !mongoose.Types.ObjectId.isValid(jobId)){
             return res.status(400).json({
                 success:false,
-                message:"jobId required"
+                message: "Invalid jobId"
             })
         }
         const job = await Job.findById(jobId)
@@ -41,6 +42,12 @@ exports.createApplication = async(req,res)=>{
             return res.status(409).json({
                 success:false,
                 message:"this job you already applied"
+            })
+        }
+        if(job.isActive !== true){
+            return res.status(400).json({
+                success:false,
+                message:"this job is deactived"
             })
         }
         const response = await application.create({userId, jobId, status:"pending"})

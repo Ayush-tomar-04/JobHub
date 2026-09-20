@@ -19,7 +19,7 @@ const oneJob = require("../Models/jobs")
 exports.getOneJob = async(req,res)=>{
     try{
         const jobId = req.params.jobId;
-        const response = await oneJob.findById(jobId);
+        const response = await oneJob.findOne({_id:jobId,isActive:true});
 
         if(!response){
             res.status(404).json({

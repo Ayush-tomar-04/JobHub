@@ -28,10 +28,9 @@ const jobs = new mongoose.Schema(
             trim:true
         },
         salary:{
-            type:String,
+            type:Number,
             required:true,
-            match: /^[0-9]+(\.[0-9]+)? LPA$/,
-            trim:true
+            min:0
         },
         requirements:{
             type:[String],
@@ -58,7 +57,11 @@ const jobs = new mongoose.Schema(
             required:true,
             trim:true,
             enum: ["Full-time", "Part-time", "Internship", "Contract"]
-        }
+        },
+        isActive: {
+            type: Boolean,
+            default: true
+    }
     }
 );
 
