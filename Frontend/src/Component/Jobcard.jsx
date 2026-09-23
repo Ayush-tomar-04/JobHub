@@ -48,6 +48,8 @@
 
 // export default JobCard;
 
+
+
 function JobCard(props){
    let footer;
    if(props.mode === "dashboard"){
@@ -68,7 +70,7 @@ function JobCard(props){
                💔 Unsave
              </button>
           )}
-
+          <button onClick={()=>props.handleJobDetails(props.id)}>View Details</button>
     </>
    }
    else if(props.mode === "applied"){
@@ -107,14 +109,16 @@ function JobCard(props){
       <span className="job-logo">{props.logo}</span>
 
       <div className="job-info">
-        <h2 className="job-title">{props.title}</h2>
+        <h3 className="job-title">{props.title}</h3>
         <h3 className="job-company">{props.company}</h3>
       </div>
     </div>
 
     <div className="job-details">
-      <p className="job-location">📍 {props.location}</p>
-      <p className="job-salary">💰 {props.salary}</p>
+      <p className="job-location">📍Location: {props.location}</p>
+      <p className="job-salary">💰Salary: {props.salary} LPA</p>
+      <p className="job-type">💼JobType: {props.jobType}</p>
+      <p className="experience-required">🧑‍💻Experince:{props.experienceRequired}</p>
     </div>
 
     <div className="job-footer">

@@ -30,6 +30,8 @@ route.post("/company",createCompany)
 route.post("/employer",createEmployer)
 route.post("/jobs",auth,employerAuth,createJob)
 
+
+route.get("/jobs",getJobs)
 route.get("/jobs",getJobs)
 route.get("/jobs/:jobId",getOneJob)
 

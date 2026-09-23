@@ -1,46 +1,19 @@
 import Statcard from "../Component/Statcard"
 import JobCard from "../Component/Jobcard";
 import { useEffect, useState } from "react";
-function Dashboard({input,jobs,setJobs,activities,setActivities}){
-    const totaljob = jobs.length;
-    
-    const profilecompleted = 100
+import { useNavigate } from "react-router-dom";
 
-    const salary = 0;
-    
-   
+function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply}){
+    const totaljob = jobs.length;
+    const appliedjob = jobs.filter((job) => job.applied === true).length
+    const profilecompleted = 100   
                 
                 const filterjob = jobs.filter((job)=>{
                     return job.title.toLowerCase().includes(input.toLowerCase())
                 })
                 
         
-                function handleapply(id) {
-                   const updatedJob = jobs.map((job)=>{
-                       if(job.id===id){
-                          return{
-                            ...job,
-                            applied : true
-                          };
-                       }
-                       return job;
-                   })
-                   setJobs(updatedJob)
-                  const activity = jobs.find((job)=>{
-                    return  job.id===id
-                  })
-                  const newActivity = {
-                    id: activity.id,
-                    title:activity.title,
-                    company:activity.company,
-                    action:"applied"
-                  }
-                  setActivities([newActivity,...activities])
-               }
-               const filterapply = jobs.filter((job)=>{
-                      return job.applied === true
-                   })
-                  const appliedjob = filterapply.length
+               
                
                 function handleSave(id){
                   
@@ -96,6 +69,10 @@ function Dashboard({input,jobs,setJobs,activities,setActivities}){
                       }
                       setActivities([newUnsaveactivity,...activities])
                 }
+                const navigate = useNavigate()
+                function handleJobDetails(id){
+                       navigate(`/jobs/${id}`)
+                }
 
                
                 
@@ -107,6 +84,7 @@ function Dashboard({input,jobs,setJobs,activities,setActivities}){
         <div className="dashboard-layout">
 
             <h2 className="dashboard-title">👋 Welcome Vishu</h2>
+
 
             <div className="statistics-grid">
                <Statcard
@@ -147,6 +125,7 @@ function Dashboard({input,jobs,setJobs,activities,setActivities}){
                         handleapply={handleapply}
                         handleSave={handleSave}
                         handleUnsaved={handleUnsaved}
+                        handleJobDetails={handleJobDetails}
                         key={job.id}
                         id={job.id}
                         logo={job.logo}
@@ -154,6 +133,8 @@ function Dashboard({input,jobs,setJobs,activities,setActivities}){
                         company={job.company}
                         location={job.location}
                         salary={job.salary}
+                        jobType={job.jobType}
+                        experienceRequired={job.experienceRequired}
                         applied={job.applied}
                         saved={job.saved}
                         mode="dashboard"

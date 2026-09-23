@@ -1,6 +1,8 @@
 const express = require("express")
 const app = express()
 
+const swaggerUi = require("swagger-ui-express")
+const swaggerSpec = require("./docs/swagger")
 
 
 require("dotenv").config()
@@ -10,6 +12,7 @@ app.use(express.json());
 const router = require('./Routes/route')
 
 app.use("/api/v1/",router)
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 const dbConnect = require("./config/database")
 const startup = async () => {

@@ -76,7 +76,7 @@
 
 .job-title{
 
-    font-size:32px;
+    font-size:25px;
 
     font-weight:700;
 
@@ -104,9 +104,11 @@
 
     display:flex;
 
-    align-items:center;
+    flex-direction: column;
 
-    gap:35px;
+    align-items:left;
+
+    gap:2px;
 
     margin:22px 0;
 
@@ -1582,4 +1584,13 @@
 
 }
 
+}
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  background: green;
+  color: white;
+  padding: 12px 20px;
 }

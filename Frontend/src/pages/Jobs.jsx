@@ -52,7 +52,7 @@ function Job({jobs , setJobs}){
             setSalary(e.target.value)
       }}
       />
-
+        
       {
         editingId === null ? (
 
@@ -229,6 +229,10 @@ function Job({jobs , setJobs}){
                         location={job.location}
 
                         salary={job.salary}
+
+                        jobType={job.jobType}
+
+                        experienceRequired={job.experienceRequired}
 
                         mode="job"
 

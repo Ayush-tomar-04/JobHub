@@ -85,6 +85,10 @@ function SavedJob({jobs,setJobs}){
 
                             salary={job.salary}
 
+                            jobType={job.jobType}
+
+                            experienceRequired={job.experienceRequired}
+
                             mode="saved"
 
                             status="Saved"

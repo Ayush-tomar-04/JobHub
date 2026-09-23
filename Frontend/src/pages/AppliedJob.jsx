@@ -57,6 +57,8 @@ function AppliedJob({jobs , setJobs}){
                                 company={job.company}
                                 location={job.location}
                                 salary={job.salary}
+                                jobType={job.jobType}
+                                experienceRequired={job.experienceRequired}
                                 mode="applied"
                                 status="Applied"
 
