@@ -6,8 +6,9 @@ axios.interceptors.request.use(
         if(token){
         const header = `Bearer ${token}`
         config.headers.Authorization = header
+        }
         return config
-    }
+    
 }
     
 )

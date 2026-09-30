@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react"
+import {getUserProfile} from "../services/authLogin"
+
 function Profile({jobs}){
 
     const savJob = jobs.filter((job)=>{
@@ -11,6 +14,26 @@ function Profile({jobs}){
     const applyJob = filterJob.length
 
     const totalJob = jobs.length
+
+    const [user , setUser] = useState(null)
+
+    useEffect(()=>{
+        async function profile(){
+
+        const response = await getUserProfile()
+        const data = {
+            name: response.data.name,
+            email: response.data.email,
+            phone: response.data.phone,
+            resume: response.data.resume,
+            skills: response.data.skills,
+            education: response.data.education
+        }
+        setUser(data)
+
+    }
+    profile()
+},[])
 
     return(
         <div className="profile-page">
@@ -26,16 +49,23 @@ function Profile({jobs}){
                 <div className="profile-info">
 
                     <h2 className="profile-name">
-                        Name: Ayush Chaudhary
+                        Name: {user?.name}
                     </h2>
 
                     <h2 className="profile-email">
-                        Email: ayush12@gmail.com
+                        Email: {user?.email}
                     </h2>
 
-                    <h2 className="profile-location">
-                        Location: Noida
+                   <h2 className="profile-location">
+                        Skills: {user?.skills?.join(",")}
                     </h2>
+                    <h2 className="profile-phone">
+                        phone:{user?.phone}
+                    </h2>
+                    <h2 className="profile-education">
+                        education:{user?.education}
+                    </h2>
+                    
 
                 </div>
 

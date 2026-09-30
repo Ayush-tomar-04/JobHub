@@ -1,4 +1,4 @@
-function Setting({jobs,setJobs,activities,setActivities,defaultjobs}){
+function Setting({jobs,setJobs,activities,setActivities}){
 
     function removeSave(){
         const newremoveJob = jobs.map((job)=>{
@@ -61,9 +61,7 @@ function Setting({jobs,setJobs,activities,setActivities,defaultjobs}){
                 className="setting-btn setting-red"
                 onClick={()=>{
                     setActivities([])
-                    setJobs(defaultjobs)
-                    localStorage.removeItem("jobs")
-                    localStorage.removeItem("activity")
+                   
                 }}
                 >
                     ♻ Reset All Data
