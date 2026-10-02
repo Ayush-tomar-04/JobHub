@@ -1,7 +1,9 @@
 import { NavLink } from "react-router-dom"
 import JobCard from "../Component/Jobcard"
+import { withdrawApplication } from "../services/applicationService"
 
-function AppliedJob({jobs , setJobs}){
+
+function AppliedJob({jobs , setJobs,applicationStatus,appliedAt}){
 
     const applyJob = jobs.filter((job)=>{
         return job.applied == true
@@ -10,6 +12,21 @@ function AppliedJob({jobs , setJobs}){
     if(applyJob.length === 0){
         console.log("No Applied Job ")
     }
+    async function handlerWithdraw(applicationId) {
+        const response = await withdrawApplication(applicationId)
+       const updateWithdraw = jobs.map((job)=>{
+        if(applicationId === job.applicationId){
+            return{
+                ...job,
+                status:"withdrawn"
+            }
+        }
+        return job
+    })
+    if(response?.success===true){
+    setJobs(updateWithdraw)
+    }
+}
 
     return(
 
@@ -41,7 +58,7 @@ function AppliedJob({jobs , setJobs}){
                 :
 
                 <div className="applied-job-list">
-
+      
                     {
 
                     applyJob.map((job)=>{
@@ -60,19 +77,23 @@ function AppliedJob({jobs , setJobs}){
                                 jobType={job.jobType}
                                 experienceRequired={job.experienceRequired}
                                 mode="applied"
-                                status="Applied"
-
+                                status={job.status}
+                                appliedAt={job.appliedAt}
+                                applicationId = {job.applicationId}
+                                handlerWithdraw = {handlerWithdraw}
                             />
-
+                              
                         )
+                        
 
                     })
+                    
 
                     }
-
                 </div>
 
             }
+            
 
         </div>
 

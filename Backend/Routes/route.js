@@ -25,6 +25,11 @@ const {getEmployerJobs} = require("../Controller/getEmployerJobs")
 const {getEmployerApplications} = require("../Controller/getEmployerApplications")
 const { updateApplicationStatus } = require("../Controller/updateApplicationStatus")
 
+const {withdrawApplication} = require("../Controller/withdrawApplication")
+const {createSavedJob} = require("../Controller/createSavedJob")
+const {getSavedJobs} = require("../Controller/getSavedJobs")
+const {removeSaveJob} = require("../Controller/createSavedJob")
+
 route.post("/user",createJobHub)
 route.post("/company",createCompany)
 route.post("/employer",createEmployer)
@@ -51,6 +56,14 @@ route.get("/employer/jobs", auth, employerAuth, getEmployerJobs)
 route.get("/employer/applications",auth,employerAuth,getEmployerApplications)
 
 route.patch( "/applications/:applicationId/status",auth,employerAuth,updateApplicationStatus)
+
+route.patch("/applications/:applicationId/withdraw",auth,userAuth,withdrawApplication)
+
+route.post("/jobs/:jobId/save", auth, userAuth, createSavedJob)
+
+route.get("/saved-jobs",auth,userAuth,getSavedJobs)
+
+route.delete("/jobs/:jobId/unsave",auth,userAuth,removeSaveJob)
 route.get("/health",(req,res)=>{
      res.json({
         message:"JobHub Api run successfully"

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import JobCard from "../Component/Jobcard"
 
-function Job({jobs , setJobs}){
+function Job({jobs , setJobs,error,setError,fetchJobs}){
 
     const [title, setTitle] = useState("");
     const [company, setCompany] = useState("");
@@ -181,7 +181,7 @@ function Job({jobs , setJobs}){
     }
 
     return(
-
+          
         <div className="job-page">
 
             <div className="job-page-header">
@@ -190,6 +190,17 @@ function Job({jobs , setJobs}){
                     💼 Job Management
                 </h2>
 
+                <div className="job-error">
+                        {error!==null && (
+                            <>
+                            <p className="job-error-message">
+                            ⚠️ {error}
+                            </p>
+                             <button className="retry-btn" onClick={fetchJobs}>Retry</button>
+                            </>
+                        )}
+                        </div>
+                {error === null && (
                 <button
                 className="add-job-btn"
                 onClick={()=>{
@@ -198,7 +209,7 @@ function Job({jobs , setJobs}){
                 >
                 ➕ Add Job
                 </button>
-
+                )}
             </div>
 
             {Form && form}

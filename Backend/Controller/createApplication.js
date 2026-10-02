@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 const { default: mongoose } = require("mongoose")
 const application = require("../Models/application")
 const Job = require("../Models/jobs")

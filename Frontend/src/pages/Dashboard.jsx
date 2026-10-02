@@ -2,8 +2,10 @@ import Statcard from "../Component/Statcard"
 import JobCard from "../Component/Jobcard";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { jobSave} from "../services/applicationService";
+import {removeSaveJob} from "../services/applicationService";
 
-function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply}){
+function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply, error , setError,fetchJobs}){
     const totaljob = jobs.length;
     const appliedjob = jobs.filter((job) => job.applied === true).length
     const profilecompleted = 100   
@@ -15,10 +17,10 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply}){
         
                
                
-                function handleSave(id){
-                  
+            async function handleSave(jobId){
+                  const response = await jobSave(jobId)
                    const updateSave = jobs.map((job)=>{
-                   if(job.id===id){
+                   if(job.id===jobId){
                     return{
                         ...job,
                         saved:true
@@ -26,9 +28,11 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply}){
                    }
                    return job
                    })
-                   setJobs(updateSave)
+                   if(response?.success===true){
+                        setJobs(updateSave)
+                   }
                    const saveActivity = jobs.find((job)=>{
-                     return job.id === id
+                     return job.id === jobId
                    })
                    const newSaveactivity = {
                     id:saveActivity.id,
@@ -44,10 +48,11 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply}){
                    })
                   const savedjob = filtersave.length
 
-                function handleUnsaved(id){
-                    
+                async function handleUnsaved(jobId){
+                    const response = await removeSaveJob(jobId)
+
                     const updateUnsave = jobs.map((job)=>{
-                        if(job.id===id){
+                        if(job.id===jobId){
                             return{
                                 ...job,
                                 saved:false
@@ -55,7 +60,9 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply}){
                         }
                         return job
                     })
+                    if(response?.success === true){
                     setJobs(updateUnsave)
+                    }
 
                     const unsaveactivity = jobs.find((job)=>{
                         return job.id===id
@@ -80,7 +87,6 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply}){
                    
    return(
     <>
-       
         <div className="dashboard-layout">
 
             <h2 className="dashboard-title">👋 Welcome Vishu</h2>
@@ -118,6 +124,18 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply}){
 
                     <h2 className="section-title">💼 Recent Jobs</h2>
 
+                     <div className="job-error">
+                        {error!==null && (
+                            <>
+                            <p className="job-error-message">
+                            ⚠️ {error}
+                            </p>
+                             <button className="retry-btn" onClick={fetchJobs}>Retry</button>
+                            </>
+                        )}
+                        </div>
+                    
+
                     <div className="job-list">
                     {
                     filterjob.map((job)=>{
@@ -127,7 +145,7 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply}){
                         handleUnsaved={handleUnsaved}
                         handleJobDetails={handleJobDetails}
                         key={job.id}
-                        id={job.id}
+                        jobId={job.id}
                         logo={job.logo}
                         title={job.title}
                         company={job.company}

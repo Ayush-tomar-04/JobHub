@@ -17,7 +17,7 @@ import Signup from "./pages/Signup";
 import { applyToJob } from "./services/applicationService";
 import { getApplication } from "./services/applicationService";
 import { ProtectedRoute } from "./Component/ProtectedRoute";
-
+import { getSaveJob } from "./services/applicationService";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -27,24 +27,37 @@ function App() {
   const [input, setInput] = useState("");
  
   const [jobs, setJobs] = useState([]);
+  const [error , setError] = useState(null)
 
-  useEffect(() => {
-    if(isAuthenticated===false){
-      setJobs([])
-      return;
-    }
-    async function fetchJobs() {
+
+  async function fetchJobs() {
+      try{
       const response = await getJobs();
       const jobArray = response.data;
 
+
       const applications = await getApplication()
       const applicationArray = applications.data
-
+      
       const applicationIds = applicationArray.map((job)=>{
         return job.jobId
       })
-      const formattedJobs = jobArray.map((job) => ({
-        id: job._id,
+
+      const saveJobs = await getSaveJob()
+      const saveJobArray = saveJobs.data
+      
+      const saveJobsId = saveJobArray.map((job)=>{
+        return job.jobId
+      })
+      const formattedJobs = jobArray.map((job) => {
+       
+        const application = applicationArray.find((application)=>{
+          return application.jobId === job._id
+      })
+       const applicationStatus = application ? application.status : null
+       const appliedAt = application ? application.appliedAt : null
+       return{
+         id: job._id,
         company: job.companyId.name,
         title: job.title,
         location: job.location,
@@ -54,12 +67,44 @@ function App() {
         description: job.description,
         requirements: job.requirements,
         applied :applicationIds.includes(job._id),
-        saved: false,
-      }));
+        saved: saveJobsId.includes(job._id),
+        status:applicationStatus,
+        applicationId: application ? application._id : null,
+        appliedAt:appliedAt
+       }
+      });
 
       setJobs(formattedJobs);
+      setError(null)
     }
-    fetchJobs();
+    catch(err){
+      console.log("API ERROR:", err);
+      if(!err.response){
+        setError("Unable to connect to the server. Please check your internet connection and try again.")
+        console.log("SETTING ERROR");
+    }
+    else if(err.response.status === 502){
+      setError("Unable to connect to the server. Please try again in a moment.")
+    }
+    else if(err.response.status === 500){
+      setError("Something went wrong on our server. Please try again in a moment.")
+    }
+    else if(err.response.status === 400 ){
+        setError("Please check your information and try again.")
+    }
+
+    else if(err.response.status === 401){
+      setError("Your session has expired. Please log in again.")
+    }    
+  }
+  }
+
+  useEffect(() => {
+    if(isAuthenticated===false){
+      setJobs([])
+      return;
+    }
+    fetchJobs()
   }, [isAuthenticated]);
 
   //ACtivity State
@@ -119,11 +164,15 @@ function App() {
       </div>
     }
     <Routes>
+
+      {/* Public Route */}
     <Route path="/signup" element={<Signup />} />
     <Route path="/login" element={<Login 
       isAuthenticated={isAuthenticated}
       setIsAuthenticated={setIsAuthenticated}
     />} />
+
+    {/* Private Route */}
    <Route
    path="/*"
    element={
@@ -147,13 +196,22 @@ function App() {
                 activities={activities}
                 setActivities={setActivities}
                 handleapply={handleapply}
+                error = {error}
+                setError = {setError}
+                fetchJobs = {fetchJobs}
               />
             }
           />
           <Route
     path="jobs"
     element={
-      <Job jobs={jobs} setJobs={setJobs} />
+      <Job 
+       jobs={jobs}
+      setJobs={setJobs}
+      error = {error}
+      setError = {setError}
+      fetchJobs = {fetchJobs}
+       />
     }
 />
           <Route
@@ -162,7 +220,7 @@ function App() {
           />
           <Route
             path="appliedjob"
-            element={<AppliedJob jobs={jobs} setJobs={setJobs} />}
+            element={<AppliedJob jobs={jobs} setJobs={setJobs}  />}
           />
           <Route path="profile/:id" element={<Profile jobs={jobs} />} />
           <Route

@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom"
 import JobCard from "../Component/Jobcard"
+import {removeSaveJob} from "../services/applicationService";
 
 function SavedJob({jobs,setJobs}){
 
@@ -7,11 +8,11 @@ function SavedJob({jobs,setJobs}){
         return job.saved === true
     })
 
-    function handleUnsaveJob(id){
-
+    async function handleUnsaveJob(jobId){
+         const response = await removeSaveJob(jobId)
          const newJob = jobs.map((job)=>{
 
-            if(job.id===id){
+            if(job.id===jobId){
 
                 return{
 
@@ -25,9 +26,9 @@ function SavedJob({jobs,setJobs}){
             return job
 
          })
-
+         if(response?.success===true){
          setJobs(newJob)
-
+         }
     }
 
     return(
