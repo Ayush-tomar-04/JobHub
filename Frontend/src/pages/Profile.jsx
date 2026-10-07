@@ -1,8 +1,38 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {getUserProfile} from "../services/authLogin"
+import { uploadResume } from "../services/applicationService"
 
 function Profile({jobs}){
+ const inputref = useRef(null)
+const [user , setUser] = useState(null)
+    async function handleResume(e){
+        if(e.target.files.length === 0){
+            inputref.current.value = ""
+            return alert("Please select required file")
+        }
+        const selectedFile = e.target.files[0]
 
+        if(selectedFile.type!=="application/pdf"){
+            inputref.current.value = ""
+            return alert("Please select only required type file")
+        }
+        const maxSize = 5*1024*1024
+        if(selectedFile.size>maxSize){
+            inputref.current.value = ""
+            return alert("File size must be 5 MB or less")
+        }
+        const formData = new FormData()
+        formData.append("resume",selectedFile)
+        console.log(formData)
+
+        const response = await uploadResume(formData)
+        setUser((previousUser)=>({
+            ...previousUser,
+            resume:response.data.resume
+
+        }))
+
+    }
     const savJob = jobs.filter((job)=>{
         return job.saved===true
     })
@@ -15,7 +45,6 @@ function Profile({jobs}){
 
     const totalJob = jobs.length
 
-    const [user , setUser] = useState(null)
 
     useEffect(()=>{
         async function profile(){
@@ -65,6 +94,17 @@ function Profile({jobs}){
                     <h2 className="profile-education">
                         education:{user?.education}
                     </h2>
+                    <h3>Resume:{user?.resume} </h3>
+                    <a
+                    href={`/uploads/${user?.resume}`}
+                    target="_blank"
+                    rel="noopener noreferrer">
+                        View Resume
+                    </a>
+                    <input type="file"
+                    accept="application/pdf"
+                    ref={inputref}
+                    onChange={handleResume}/>
                     
 
                 </div>

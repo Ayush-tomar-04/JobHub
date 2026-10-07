@@ -29,6 +29,8 @@ const {withdrawApplication} = require("../Controller/withdrawApplication")
 const {createSavedJob} = require("../Controller/createSavedJob")
 const {getSavedJobs} = require("../Controller/getSavedJobs")
 const {removeSaveJob} = require("../Controller/createSavedJob")
+const upload = require("../middleware/multer");
+const { uploadResume } = require("../Controller/uploadResume");
 
 route.post("/user",createJobHub)
 route.post("/company",createCompany)
@@ -64,6 +66,10 @@ route.post("/jobs/:jobId/save", auth, userAuth, createSavedJob)
 route.get("/saved-jobs",auth,userAuth,getSavedJobs)
 
 route.delete("/jobs/:jobId/unsave",auth,userAuth,removeSaveJob)
+
+route.post("/user/resume",auth,userAuth,upload.single("resume"),uploadResume)
+
+
 route.get("/health",(req,res)=>{
      res.json({
         message:"JobHub Api run successfully"

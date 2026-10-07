@@ -66,4 +66,13 @@ export const removeSaveJob = async(jobId)=>{
     }
 
 }
-
+export const uploadResume = async(formData)=>{
+    try{
+        const response = await axios.post("/api/v1/user/resume",formData)
+        return response.data
+    }
+    catch(err){
+        console.log(err)
+        throw err
+    }
+}

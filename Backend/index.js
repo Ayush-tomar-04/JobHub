@@ -9,6 +9,7 @@ require("dotenv").config()
 const PORT = process.env.PORT || 4000;
 app.use(express.json());
 
+app.use("/uploads",express.static("uploads"))
 const router = require('./Routes/route')
 
 app.use("/api/v1/",router)

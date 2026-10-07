@@ -94,7 +94,7 @@ function JobCard(props){
                ❤️ Save
              </button>
            ) : (
-             <button onClick={() => props.handleUnsaved(props.id)}>
+             <button onClick={() => props.handleUnsaved(props.jobId)}>
                💔 Unsave
              </button>
           )}
