@@ -80,6 +80,7 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply, er
                 function handleJobDetails(id){
                        navigate(`/jobs/${id}`)
                 }
+              
 
                
                 

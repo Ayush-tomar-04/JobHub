@@ -83,7 +83,7 @@ function JobCard(props){
    if(props.mode === "dashboard"){
     footer = <>
       {!props.applied ? (
-             <button onClick={() => props.handleapply(props.id)}>
+             <button onClick={() => props.handleapply(props.jobId)}>
                Apply
             </button>
            ) : (
@@ -98,7 +98,7 @@ function JobCard(props){
                💔 Unsave
              </button>
           )}
-          <button onClick={()=>props.handleJobDetails(props.id)}>View Details</button>
+          <button onClick={()=>props.handleJobDetails(props.jobId)}>View Details</button>
     </>
    }
    else if(props.mode === "applied"){

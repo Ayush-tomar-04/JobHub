@@ -32,6 +32,11 @@ const {removeSaveJob} = require("../Controller/createSavedJob")
 const upload = require("../middleware/multer");
 const { uploadResume } = require("../Controller/uploadResume");
 
+const { getEmployerApplicationDetails } = require("../Controller/getEmployerApplicationDetails");
+
+const { getResume } = require("../Controller/getResume")
+const { getEmployerProfile } = require("../Controller/getEmployerProfile");
+
 route.post("/user",createJobHub)
 route.post("/company",createCompany)
 route.post("/employer",createEmployer)
@@ -69,6 +74,15 @@ route.delete("/jobs/:jobId/unsave",auth,userAuth,removeSaveJob)
 
 route.post("/user/resume",auth,userAuth,upload.single("resume"),uploadResume)
 
+route.get("/employer/applications/:applicationId", auth, employerAuth, getEmployerApplicationDetails);
+
+route.get( "/employer/applications/:applicationId/resume", auth,  employerAuth, getResume)
+route.get(
+    "/employer/profile",
+    auth,
+    employerAuth,
+    getEmployerProfile
+);
 
 route.get("/health",(req,res)=>{
      res.json({

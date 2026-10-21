@@ -2,9 +2,9 @@ const user = require("../Models/userSchema")
 const bcrypt = require("bcrypt")
 exports.createJobHub = async(req,res)=>{
     try{
-        const{name,email,phone,password,resume,skills,education} = req.body;
+        const{name,email,phone,password,skills,education} = req.body;
         
-        if(!name || !email || !phone || !password || !resume || !skills || !education){
+        if(!name || !email || !phone || !password || !skills || !education){
             return res.status(400).json({
                 success:false,
                 data:null,
@@ -28,7 +28,7 @@ exports.createJobHub = async(req,res)=>{
         }
         const hashPassword = await bcrypt.hash(password,10);
 
-        const response = await user.create({name,email,phone,password:hashPassword,resume,skills,education,role:"user"});
+        const response = await user.create({name,email,phone,password:hashPassword,skills,education,role:"user"});
          const safeResponse = response.toObject()
          delete safeResponse.password
         res.status(201).json({

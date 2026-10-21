@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 function JobDetails({jobs,handleapply}){
 
     const {id} = useParams()
-
+    console.log("jobID:",id)
     const job = jobs.find(job=>job.id===id)
     if (!job) {
     return <p>Job not found</p>

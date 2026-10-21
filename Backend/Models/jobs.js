@@ -61,7 +61,11 @@ const jobs = new mongoose.Schema(
         isActive: {
             type: Boolean,
             default: true
-    }
+    },
+    appliedAt: {
+        type: Date,
+        default: Date.now
+        }
     }
 );
 

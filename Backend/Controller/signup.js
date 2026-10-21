@@ -6,13 +6,14 @@
 
 
 const employer = require("../Models/employer")
+const Company = require("../Models/company")
 const bcrypt = require("bcrypt")
 
 exports.signup = async(req,res)=>{
     try{
-        const{empId, name, email, phone, password, companyId} = req.body;
+        const{name, email, phone, password, companyId} = req.body;
 
-        if(!empId || !name || !email || !phone || !password || !companyId){
+        if(!name || !email || !phone || !password || !companyId){
             return res.status(400).json({
                 success:false,
                 message:"Please Enter valid Input Field"
@@ -25,15 +26,16 @@ exports.signup = async(req,res)=>{
                 message:"Email is already regiestered"
             })
         }
-        const exitingEmpid = await employer.findOne({empId:empId})
-        if(exitingEmpid){
-            return res.status(409).json({
+        const company = await Company.findById(companyId)
+        if(!company){
+            return res.status(404).json({
                 success:false,
-                message:"EmpId is already regiestered"
+                message:"Company Not Found"
             })
         }
+    
         const hashPassword = await bcrypt.hash(password,10)
-        const response = await employer.create({empId, name, email, phone, password:hashPassword , companyId,role:"employer"})
+        const response = await employer.create({name, email, phone, password:hashPassword , companyId,role:"employer",companyStatus: "pending"})
 
         const safeResponse = response.toObject()
         delete safeResponse.password

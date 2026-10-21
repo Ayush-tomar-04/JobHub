@@ -18,11 +18,28 @@ import { applyToJob } from "./services/applicationService";
 import { getApplication } from "./services/applicationService";
 import { ProtectedRoute } from "./Component/ProtectedRoute";
 import { getSaveJob } from "./services/applicationService";
+import EmployeLayout from "./Component/EmployerLayout";
+import EmployerDashboard from "./pages/EmployerDashboard";
+import EmployerJobs from "./pages/EmployerJobs";
+import CreateJob from "./pages/CreateJob";
+import ManageJobs from "./pages/ManageJobs";
+import EmployerApplications from "./pages/EmployerApplications";
+import CompanyProfile from "./pages/CompanyProfile";
+import { jwtDecode } from "jwt-decode";
+
+import EmployerApplicationDetails from "./pages/EmployerApplicationDetails";
+import EditJob from "./pages/EditJob";
+import EmployerProfile from "./pages/EmployerProfile";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("token")
+    !!(localStorage.getItem("token") || localStorage.getItem("EmployerToken"))
 )
+const token =
+  localStorage.getItem("EmployerToken") ||
+  localStorage.getItem("token");
+const decodedToken = token ? jwtDecode(token) : null
+const role = decodedToken?.role
 
   const [input, setInput] = useState("");
  
@@ -32,6 +49,8 @@ function App() {
 
   async function fetchJobs() {
       try{
+        if(role==="user"){
+          
       const response = await getJobs();
       const jobArray = response.data;
 
@@ -72,11 +91,13 @@ function App() {
         applicationId: application ? application._id : null,
         appliedAt:appliedAt
        }
-      });
 
+      });
+    
       setJobs(formattedJobs);
       setError(null)
     }
+  }
     catch(err){
       console.log("API ERROR:", err);
       if(!err.response){
@@ -176,7 +197,7 @@ function App() {
    <Route
    path="/*"
    element={
-     <ProtectedRoute>
+     <ProtectedRoute requiredRole="user">
       <JobHubLayout
         input = {input}
         setInput = {setInput}
@@ -185,6 +206,7 @@ function App() {
       />
     </ProtectedRoute>
    }>
+  
 
           <Route
             path=""
@@ -240,6 +262,61 @@ function App() {
             element={<JobDetails jobs={jobs} handleapply={handleapply} />}
           />
           </Route>
+          {/* {EmployeLayout Routes} */}
+          <Route
+          path="/employer"
+          element={
+            <ProtectedRoute requiredRole="employer">
+              <EmployeLayout/>
+            </ProtectedRoute>
+          }
+          >
+            <Route
+            path=""
+            element={
+              <EmployerDashboard/>
+            }
+            />
+            <Route path="applications/:applicationId" element={<EmployerApplicationDetails />} />
+            <Route
+            path="jobs"
+            element={
+              <EmployerJobs/>
+            }
+            />
+            <Route
+            path="create-job"
+            element={
+              <CreateJob/>
+            }
+            />
+            <Route
+            path="manage-jobs"
+            element={
+              <ManageJobs/>
+            }
+            />
+            <Route path="jobs/:jobId/edit" element={<EditJob />} />
+            <Route
+            path="applications"
+            element={
+              <EmployerApplications/>
+            }
+            />
+            <Route
+            path="company"
+            element={
+              <CompanyProfile/>
+            }
+            />
+            <Route
+            path="profile"
+            element={
+              <EmployerProfile/>
+            }
+            />
+          </Route>
+          
       </Routes>
     </>
   );

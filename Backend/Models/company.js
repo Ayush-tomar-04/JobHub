@@ -8,7 +8,7 @@ const company = new mongoose.Schema(
         },
         logo:{
             type:String,
-            required:true
+           
         },
         description:{
             type:String,
@@ -29,6 +29,10 @@ const company = new mongoose.Schema(
         foundedYear:{
             type:Number,
             required:true
+        },
+        ownerEmpId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"employer",
         }
     }
 );

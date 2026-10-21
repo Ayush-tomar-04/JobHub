@@ -52,7 +52,7 @@ exports.createApplication = async(req,res)=>{
         res.status(500).json({
             success:false,
             data:null,
-            message:"Application not created"
+            message:err.message
         })
     }
 }

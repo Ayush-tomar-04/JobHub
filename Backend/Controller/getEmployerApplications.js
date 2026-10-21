@@ -10,14 +10,15 @@
 const Job = require("../Models/jobs")
 const application = require("../Models/application")
 
+
 exports.getEmployerApplications = async(req,res)=>{
     try{
         const employerId = req.user.userId
-
+    
         const jobs = await Job.find({employerId})
 
         const jobId = jobs.map(job=>job._id)
-        const response = await application.find({jobId:{$in:jobId}})
+        const response = await application.find({jobId:{$in:jobId}}).populate("userId","name email resume").populate("jobId","title")
 
         res.status(200).json({
             success:true,

@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 const employer = new mongoose.Schema(
     {
-        empId:{
-            type:String,
-            required:true
-        },
         name:{
             type:String,
             required:true
@@ -31,7 +27,13 @@ const employer = new mongoose.Schema(
             type:String,
             required:true,
             enum:["employer"]
-        }
+        },
+        companyStatus: {
+        type: String,
+        enum: ["pending", "approved", "rejected"],
+        default: "pending",
+        required: true
+}
     }
 );
 

@@ -20,7 +20,7 @@ const user = new mongoose.Schema(
         },
         resume:{
             type:String,
-            required:true
+            
         },
         skills:{
             type:Array,
