@@ -2,86 +2,62 @@ import Statcard from "../Component/Statcard"
 import JobCard from "../Component/Jobcard";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { jobSave} from "../services/applicationService";
-import {removeSaveJob} from "../services/applicationService";
 
-function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply, error , setError,fetchJobs}){
+import { getUserProfile } from "../services/authLogin";
+
+function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply,handleSave, error , setError,fetchJobs,savingJobId, handleUnsaved,unsavingJobId,handleJobDetails}){
     const totaljob = jobs.length;
     const appliedjob = jobs.filter((job) => job.applied === true).length
-    const profilecompleted = 100   
-                
+    const profilecompleted = 100
+
+    const [localError , setLocalError] = useState("")
+    const [loading , setLoading] = useState(true)
+
+    function showError(message){
+        setLocalError(message)
+        setTimeout(()=>{
+            setLocalError("")
+        },3000)
+    }
+    
+    const [userProfile , setUserProfile] = useState("")
+
                 const filterjob = jobs.filter((job)=>{
                     return job.title.toLowerCase().includes(input.toLowerCase())
                 })
                 
         
-               
-               
-            async function handleSave(jobId){
-                  const response = await jobSave(jobId)
-                   const updateSave = jobs.map((job)=>{
-                   if(job.id===jobId){
-                    return{
-                        ...job,
-                        saved:true
+               useEffect(()=>{async function getUser(){
+                  try{
+                    showError("")
+                    setLoading(true)
+                    const response = await getUserProfile()
+                    if(response?.success===true){
+                        setUserProfile(response.data)
                     }
-                   }
-                   return job
-                   })
-                   if(response?.success===true){
-                        setJobs(updateSave)
-                   }
-                   const saveActivity = jobs.find((job)=>{
-                     return job.id === jobId
-                   })
-                   const newSaveactivity = {
-                    id:saveActivity.id,
-                    title:saveActivity.title,
-                    company:saveActivity.company,
-                    action:"saved"
-                   }
-                   setActivities([newSaveactivity,...activities])
-                }
+                    else{
+                        showError("Unable to fetch user profile please try again.")
+                    }
+                  }
+                  catch(err){
+                    showError(err.response?.data?.message || "Unable to fetch user profile please try again.")
+                  }
+                  finally{
+                    setLoading(false)
+                  }
+               }
+            getUser()
+            },[])
+               
+            
+            
 
                 const filtersave = jobs.filter((job)=>{
                       return job.saved === true
                    })
                   const savedjob = filtersave.length
 
-                async function handleUnsaved(jobId){
-                    const response = await removeSaveJob(jobId)
-
-                    const updateUnsave = jobs.map((job)=>{
-                        if(job.id===jobId){
-                            return{
-                                ...job,
-                                saved:false
-                            }
-                        }
-                        return job
-                    })
-                    if(response?.success === true){
-                    setJobs(updateUnsave)
-                    }
-
-                    const unsaveactivity = jobs.find((job)=>{
-                        return job.id===id
-                    })
-                      const newUnsaveactivity={
-                         id:unsaveactivity.id,
-                         title:unsaveactivity.title,
-                         company:unsaveactivity.company,
-                         action:"unsaved",
-                         time:Date.now()
-                      }
-                      setActivities([newUnsaveactivity,...activities])
-                }
-                const navigate = useNavigate()
-                function handleJobDetails(id){
-                       navigate(`/jobs/${id}`)
-                }
-              
-
+               
                
                 
 
@@ -89,8 +65,12 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply, er
    return(
     <>
         <div className="dashboard-layout">
-
-            <h2 className="dashboard-title">👋 Welcome Vishu</h2>
+            {localError && <p>{localError}</p>}
+            {loading ? (
+                <p>Loading profile...</p>
+            ) : (
+                <h2>👋 Welcome {userProfile.name}</h2>
+            )}
 
 
             <div className="statistics-grid">
@@ -125,19 +105,24 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply, er
 
                     <h2 className="section-title">💼 Recent Jobs</h2>
 
-                     <div className="job-error">
-                        {error!==null && (
-                            <>
+                     {error && (
+                        <div className="job-error">
                             <p className="job-error-message">
-                            ⚠️ {error}
+                                ⚠️ {error}
                             </p>
-                             <button className="retry-btn" onClick={fetchJobs}>Retry</button>
-                            </>
-                        )}
+
+                            <button
+                                className="retry-btn"
+                                onClick={fetchJobs}
+                            >
+                                Retry
+                            </button>
                         </div>
+                    )}
                     
 
                     <div className="job-list">
+                   
                     {
                     filterjob.map((job)=>{
                         return <JobCard
@@ -156,6 +141,8 @@ function Dashboard({input,jobs,setJobs,activities,setActivities, handleapply, er
                         experienceRequired={job.experienceRequired}
                         applied={job.applied}
                         saved={job.saved}
+                        saving ={savingJobId===job.id}
+                        unsaving={unsavingJobId === job.id}
                         mode="dashboard"
                         />
                     })}

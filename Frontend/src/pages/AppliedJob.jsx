@@ -78,8 +78,17 @@ function AppliedJob({jobs , setJobs,applicationStatus,appliedAt}){
                                 experienceRequired={job.experienceRequired}
                                 mode="applied"
                                 status={job.status}
-                                appliedAt={job.appliedAt}
+                                
                                 applicationId = {job.applicationId}
+                                appliedAt = {job.appliedAt
+                                    ? new Date(job.appliedAt).toLocaleString("en-IN", {
+                                        day: "numeric",
+                                        month: "short",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        })
+                                    : "N/A"}
                                 handlerWithdraw = {handlerWithdraw}
                             />
                               

@@ -13,7 +13,9 @@ function JobHubLayout({input , setInput , isAuthenticated , setIsAuthenticated})
 
            <div className="layout">
               <Sidebar />
-              <Outlet />
+              <div className="jobhub-main-content">
+        <Outlet />
+    </div>
            </div>
         </>
     )

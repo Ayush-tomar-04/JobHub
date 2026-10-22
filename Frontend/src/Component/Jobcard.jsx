@@ -80,7 +80,7 @@ const statusConfig = {
 function JobCard(props){
   const currentStatus = statusConfig[props.status]
    let footer;
-   if(props.mode === "dashboard"){
+   if(props.mode === "dashboard" || props.mode === "job"){
     footer = <>
       {!props.applied ? (
              <button onClick={() => props.handleapply(props.jobId)}>
@@ -90,12 +90,16 @@ function JobCard(props){
              <button disabled>Applied</button>
            )}
            {!props.saved ? (
-            <button onClick={() => props.handleSave(props.jobId)}>
-               ❤️ Save
+            <button 
+            disabled={props.saving}
+            onClick={() => props.handleSave(props.jobId)}>
+              {props.saving ? "Saving" :  "❤️ Save" }
              </button>
            ) : (
-             <button onClick={() => props.handleUnsaved(props.jobId)}>
-               💔 Unsave
+             <button 
+             disabled={props.unsaving}
+             onClick={() => props.handleUnsaved(props.jobId)}>
+               {props.unsaving ? "Unsaving" : "💔 Unsave"}
              </button>
           )}
           <button onClick={()=>props.handleJobDetails(props.jobId)}>View Details</button>
@@ -126,20 +130,7 @@ function JobCard(props){
           >Remove Save Job</button>
     </>
    }
-   else{
-        footer = <>
-          <button
-          onClick={()=>{
-            props.handleEdit(props.id)
-          }}
-          >Edit</button>
-          <button 
-          onClick={()=>{
-            props.handleDelete(props.id)
-          }} 
-          >Delete</button>
-        </>
-   }
+   
 
    return(
       
@@ -159,7 +150,7 @@ function JobCard(props){
       <p className="job-salary">💰Salary: {props.salary} LPA</p>
       <p className="job-type">💼JobType: {props.jobType}</p>
       <p className="experience-required">🧑‍💻Experince:{props.experienceRequired}</p>
-      <p className="applied-date">Applied Date:{props.appliedAt}</p>
+      <p className="applied-date">Posted Date:{props.appliedAt}</p>
     </div>
 
     <div className="job-footer">

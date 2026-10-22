@@ -608,13 +608,24 @@
     color:white;
 
 }
+
 /* ===========================
         Layout
 =========================== */
 
-.layout{
-    display:flex;
-    margin-top:70px;
+.layout {
+    display: flex;
+    margin-top: 70px;
+    align-items: stretch;
+}
+
+.jobhub-main-content {
+    flex: 1;
+    min-width: 0;
+    min-height: calc(100vh - 70px);
+    background: #f5f7fb;
+    border-top-left-radius: 20px;
+    overflow: hidden;
 }
 
 /* ==========================================
@@ -1979,3 +1990,17 @@
     background: #d1d5db;
 }
 
+/* Navbar */
+.navbar {
+    background-color: #111827;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #111827;
+}
+
+.jobhub-main-content {
+    border-top-left-radius: 16px;
+    overflow: hidden;
+}

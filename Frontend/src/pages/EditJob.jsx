@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getOneJob, updateJob } from "../services/employerService";
 import "../Employer/employer.css"
+
 function EditJob() {
   const navigate = useNavigate();
   const { jobId } = useParams();

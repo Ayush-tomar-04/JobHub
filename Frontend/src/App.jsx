@@ -1,5 +1,5 @@
 import JobHubLayout from "./Component/JobHubLayout";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import SavedJob from "./pages/SavedJob";
 import AppliedJob from "./pages/AppliedJob";
@@ -30,8 +30,10 @@ import { jwtDecode } from "jwt-decode";
 import EmployerApplicationDetails from "./pages/EmployerApplicationDetails";
 import EditJob from "./pages/EditJob";
 import EmployerProfile from "./pages/EmployerProfile";
-
+import { jobSave, removeSaveJob } from "./services/applicationService";
 function App() {
+  const navigate = useNavigate();
+
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!(localStorage.getItem("token") || localStorage.getItem("EmployerToken"))
 )
@@ -45,6 +47,10 @@ const role = decodedToken?.role
  
   const [jobs, setJobs] = useState([]);
   const [error , setError] = useState(null)
+
+  const [savingJobId, setSavingJobId] = useState(null);
+  const [unsavingJobId, setUnsavingJobId] = useState(null);
+
 
 
   async function fetchJobs() {
@@ -176,7 +182,93 @@ const role = decodedToken?.role
     setActivities([newActivity, ...activities]);
   }
 }
+async function handleUnsaved(jobId) {
+  try {
+    setUnsavingJobId(jobId);
 
+    const response = await removeSaveJob(jobId);
+
+    if (response?.success !== true) {
+      setError("Unable to unsave job. Please try again.");
+      return;
+    }
+
+    setJobs((prevJobs) =>
+      prevJobs.map((job) =>
+        job.id === jobId ? { ...job, saved: false } : job
+      )
+    );
+
+    const job = jobs.find((job) => job.id === jobId);
+
+    if (job) {
+      setActivities((prevActivities) => [
+        {
+          id: job.id,
+          title: job.title,
+          company: job.company,
+          action: "unsaved",
+          time: Date.now(),
+        },
+        ...prevActivities,
+      ]);
+    }
+
+    setError(null);
+  } catch (err) {
+    setError(
+      err.response?.data?.message ||
+      "Unable to unsave job. Please try again."
+    );
+  } finally {
+    setUnsavingJobId(null);
+  }
+}
+
+ async function handleSave(jobId) {
+  try {
+    setSavingJobId(jobId);
+
+    const response = await jobSave(jobId);
+
+    if (response?.success !== true) {
+      setError("Unable to save job. Please try again.");
+      return;
+    }
+
+    setJobs((prevJobs) =>
+      prevJobs.map((job) =>
+        job.id === jobId ? { ...job, saved: true } : job
+      )
+    );
+
+    const job = jobs.find((job) => job.id === jobId);
+
+    if (job) {
+      setActivities((prevActivities) => [
+        {
+          id: job.id,
+          title: job.title,
+          company: job.company,
+          action: "saved",
+        },
+        ...prevActivities,
+      ]);
+    }
+
+    setError(null);
+  } catch (err) {
+    setError(
+      err.response?.data?.message ||
+      "Unable to save job. Please try again."
+    );
+  } finally {
+    setSavingJobId(null);
+  }
+}
+function handleJobDetails(id){
+        navigate(`/jobs/${id}`)
+      }
   return (
     <>
     {notification &&
@@ -221,6 +313,11 @@ const role = decodedToken?.role
                 error = {error}
                 setError = {setError}
                 fetchJobs = {fetchJobs}
+                handleSave={handleSave}
+                savingJobId={savingJobId}
+                handleUnsaved={handleUnsaved}
+                unsavingJobId={unsavingJobId}
+                handleJobDetails={handleJobDetails}
               />
             }
           />
@@ -233,6 +330,12 @@ const role = decodedToken?.role
       error = {error}
       setError = {setError}
       fetchJobs = {fetchJobs}
+      handleapply={handleapply}
+      handleSave={handleSave}
+      savingJobId={savingJobId}
+      handleUnsaved={handleUnsaved}
+      unsavingJobId={unsavingJobId}
+      handleJobDetails={handleJobDetails}
        />
     }
 />
