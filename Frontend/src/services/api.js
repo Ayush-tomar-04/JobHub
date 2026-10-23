@@ -14,14 +14,7 @@ axios.interceptors.request.use(
         const token = isEmployerRequest
             ? localStorage.getItem("EmployerToken")
             : localStorage.getItem("token");
-console.log("Save Job Auth Debug:", {
-    url,
-    method: config.method,
-    isEmployerRequest,
-    userTokenExists: !!localStorage.getItem("token"),
-    employerTokenExists: !!localStorage.getItem("EmployerToken"),
-    selectedTokenExists: !!token
-});
+
         if (token) {
             config.headers = config.headers || {};
             config.headers.Authorization = `Bearer ${token}`;
