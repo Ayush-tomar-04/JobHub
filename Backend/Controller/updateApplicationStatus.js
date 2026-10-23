@@ -1,10 +1,16 @@
 const Application = require("../Models/application")
 const Job = require("../Models/jobs")
-
+const mongoose = require("mongoose")
 exports.updateApplicationStatus = async(req,res)=>{
     try{
         const applicationId = req.params.applicationId
-
+        if(!mongoose.Types.ObjectId.isValid(applicationId)){
+              return res.status(400).json({
+                success:false,
+                data:null,
+                message:"Invalid application ID"
+            })
+        }
         const application = await Application.findById(applicationId)
         if(!application){
             return res.status(404).json({
