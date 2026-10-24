@@ -6,7 +6,7 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
-import "../Employer/mployer.css";
+import "../Employer/employer.css";
 function EmployerNavbar() {
   const navigate = useNavigate();
 
