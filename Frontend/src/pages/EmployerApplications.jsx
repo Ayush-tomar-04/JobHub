@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { getEmployerApplications } from "../services/employerService";
-import ApplicationStatcard from "../Component/applicationStatcard";
+import ApplicationStatcard from "../Component/ApplicationStatcard";
 import EmployerApplicationCard from "../Component/EmployerApplicationCard";
 import "../Employer/employer.css"
 
