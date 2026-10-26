@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-function JobDetails({jobs,handleapply}){
+function JobDetails({jobs,handleapply,handleSave,handleUnsaved}){
 
     const {id} = useParams()
     console.log("jobID:",id)
@@ -11,6 +11,12 @@ function JobDetails({jobs,handleapply}){
 
 async function submitApplication(){
       handleapply(job.id)
+}
+function savedJob(){
+   handleSave(job.id)
+}
+function unsavedJob(){
+   handleUnsaved(job.id)
 }
    return (
     <div>
@@ -37,7 +43,14 @@ async function submitApplication(){
             <button disabled>Applied</button>
           )
          }
-         <button>Save</button>
+        {!job.saved ? 
+        (
+         <button onClick={savedJob}>Save</button>
+        ):(
+         <button onClick={unsavedJob}>Unsave</button>
+        )
+
+        }
     </div>
    )
 }

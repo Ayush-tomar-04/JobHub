@@ -362,7 +362,10 @@ function handleJobDetails(id){
           
           <Route
             path="jobs/:id"
-            element={<JobDetails jobs={jobs} handleapply={handleapply} />}
+            element={<JobDetails jobs={jobs} handleapply={handleapply} 
+              handleSave={handleSave}
+              handleUnsaved={handleUnsaved}
+            />}
           />
           </Route>
           {/* {EmployeLayout Routes} */}
