@@ -10,7 +10,6 @@ export function ProtectedRoute({children,requiredRole}){
        return <Navigate to="/login"/>
     }
      const decodedToken = jwtDecode(token)
-     console.log(decodedToken)
      if(decodedToken.role!==requiredRole){
         return <Navigate to="/login"/>
      }
